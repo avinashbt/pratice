@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AB Testing Tool</title>
+    <style>
+        /* CSS styles for AB Testing Tool */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fbb034;
+            background-image: linear-gradient(315deg, #fbb034 0%, #ffdd00 74%);
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0069d9;
+        }
+
+        #conversionRate {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #testResults {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .bar-chart {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .bar {
+            width: 50px;
+            margin-right: 10px;
+            background-color: #007bff;
+            transition: height 0.3s ease;
+        }
+
+        .bar-label {
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* Custom styles for the chart - you can adjust these to your preference */
+        .bar-chart .bar {
+            background-color: #007bff;
+        }
+
+        .bar-chart .bar:hover {
+            background-color: #0069d9;
+        }
+
+        .footer {
+            text-align: center;
+            position: absolute;
+            bottom: 0px;
+            padding: 0 20%;
+
+        }
+    </style>
+</head>
+
+<body>
+    <h1>AB Testing Tool</h1>
+
+    <form id="abTestingForm">
+        <label for="visitorsA">Number of visitors for Test "A":</label>
+        <input type="number" id="visitorsA" required>
+        <br>
+        <label for="conversionsA">Number of conversions for Test "A":</label>
+        <input type="number" id="conversionsA" required>
+        <br>
+        <label for="visitorsB">Number of visitors for Test "B":</label>
+        <input type="number" id="visitorsB" required>
+        <br>
+        <label for="conversionsB">Number of conversions for Test "B":</label>
+        <input type="number" id="conversionsB" required>
+        <br>
+        <button type="submit">Calculate</button>
+    </form>
+    <p id="conversionRate"></p>
+    <p id="testResults"></p>
+
+    <!-- Bar Chart Container -->
+    <div class="bar-chart" id="barChartContainer">
+        <div class="bar" id="barA"></div>
+        <div class="bar" id="barB"></div>
+    </div>
+    <div class="bar-labels">
+        <p class="bar-label">Test A</p>
+        <p class="bar-label">Test B</p>
+    </div>
+
+    <div class="footer">
+        A/B Testing
+        Significance Calculator
+        Are you wondering if a design or copy change impacted your sales? Enter your visitor and conversion numbers
+        below to find out. The significance calculator will
+        tell you if a variation increased your sales, and by how much.
+    </div>
+
+    <script>
+
+        // JavaScript for AB Testing Tool
+
+        // Define event listener for form submission
+        document.getElementById('abTestingForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+            calculateABTestResults(); // Call function to calculate AB test results
+        });
+
+        // Function to calculate AB test results
+        function calculateABTestResults() {
+            // Get input values
+            var visitorsA = parseInt(document.getElementById('visitorsA').value);
+            var conversionsA = parseInt(document.getElementById('conversionsA').value);
+            var visitorsB = parseInt(document.getElementById('visitorsB').value);
+            var conversionsB = parseInt(document.getElementById('conversionsB').value);
+
+            // Calculate conversion rates
+            var conversionRateA = (conversionsA / visitorsA) * 100;
+            var conversionRateB = (conversionsB / visitorsB) * 100;
+
+            // Display conversion rates
+            document.getElementById('conversionRate').innerHTML = "Conversion Rate for Test A: " + conversionRateA.toFixed(2) + "%<br>Conversion Rate for Test B: " + conversionRateB.toFixed(2) + "%";
+
+            // Calculate and display test results
+            if (conversionRateA > conversionRateB) {
+                document.getElementById('testResults').innerHTML = "Test A is performing better.";
+            } else if (conversionRateA < conversionRateB) {
+                document.getElementById('testResults').innerHTML = "Test B is performing better.";
+            } else {
+                document.getElementById('testResults').innerHTML = "Both tests are performing equally.";
+            }
+
+            // Update bar chart heights
+            document.getElementById('barA').style.height = conversionRateA + "%";
+            document.getElementById('barB').style.height = conversionRateB + "%";
+        }
+    </script>
+
+</body>
+
+</html>
