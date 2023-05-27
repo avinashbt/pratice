@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Laptop Charging Alert</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin-top: 50px;
+        }
+
+        #charging-status,
+        #battery-percentage {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        #alert-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Laptop Charging Alert</h1>
+    <div id="charging-status"></div>
+    <div id="battery-percentage"></div>
+    <button id="alert-button" disabled>Ring Alert</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chargingStatus = document.getElementById('charging-status');
+            const batteryPercentage = document.getElementById('battery-percentage');
+            const alertButton = document.getElementById('alert-button');
+            let ringtonePlayed = false; // Track if the ringtone has been played
+
+            function updateBatteryStatus() {
+                navigator.getBattery().then(function (battery) {
+                    const percentage = Math.floor(battery.level * 100);
+                    batteryPercentage.textContent = `Battery Percentage: ${percentage}%`;
+
+                    if (battery.charging) {
+                        chargingStatus.textContent = 'Laptop is charging';
+                        alertButton.disabled = true;
+                    } else {
+                        chargingStatus.textContent = 'Laptop is not charging';
+                        alertButton.disabled = false;
+                        if (percentage >= 44 && !ringtonePlayed) {
+                            alertButton.disabled = true;
+                            playRingtone();
+                        } else if (battery.level === 1) {
+                            alertButton.disabled = false;
+                            alert('Laptop is fully charged!');
+                        }
+                    }
+                });
+            }
+
+            function playRingtone() {
+                const ringtoneURL = 'heer-ranjha-bansuri.mp3'; // Replace with your desired ringtone URL
+                const audio = new Audio(ringtoneURL);
+                audio.play();
+                ringtonePlayed = true; // Mark the ringtone as played
+            }
+
+            alertButton.addEventListener('click', function () {
+                alert('Laptop is fully charged!');
+                playRingtone();
+            });
+
+            setInterval(updateBatteryStatus, 5000); // Update battery status every 5 seconds
+        });
+
+
+    </script>
+</body>
+
+</html>
